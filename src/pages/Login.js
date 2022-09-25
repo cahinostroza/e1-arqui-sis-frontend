@@ -1,16 +1,28 @@
+import { useState } from "react";
+import ErrorMessage from "../components/error-message";
+import LoginForm from "../components/forms/login.component";
+import useAuthHook from "../hooks/use-auth.hook";
 import { UsersService } from "../services/users.service";
 
 export default function Login() {
+  const [userNotFound, setUserNotFound] = useState(false);
+  const authHook = useAuthHook();
   const usersService = new UsersService();
-  const login = async() => {
+  const login = async(userData) => {
     try {
-      const user = await usersService.login({ username: 'cahinostroza', password: 'cristian1999'});
-      console.log(user);
+      const user = await usersService.login(userData);
+      authHook.handleUserLogin(user);
     } catch (error) {
-      console.log(error);
+      if (error.message === 'user not found') {
+        setUserNotFound(true);
+      }
+      console.log(error.message);
     }
   } 
   return (
-    <button onClick={login}>Login</button>
+    <>
+      <ErrorMessage show={userNotFound} message={"Usuario no encontrado"}/>
+      <LoginForm loginHandler={login}/>
+    </>
   );
 }

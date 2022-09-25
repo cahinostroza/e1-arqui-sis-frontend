@@ -27,7 +27,9 @@ export class BaseService {
     )
     const resJson = await response.json()
     if (!response.ok) {
-      throw new Error(resJson)
+      let message;
+      if (resJson.message) message = resJson.message;
+      throw new Error(message)
     }
     return resJson
   }
