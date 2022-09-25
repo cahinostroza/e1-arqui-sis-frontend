@@ -19,6 +19,7 @@ export class BaseService {
         'Content-Type': 'application/json',
       },
       method: method,
+      credentials: 'include'
     }
     if (body) content['body'] = JSON.stringify(body);
     const response = await fetch(
