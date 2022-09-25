@@ -12,4 +12,8 @@ export class UsersService extends BaseService {
   async register(user) {
     return this.request(this.RequestMethod.Post, '/register', user);
   }
+
+  async logout() {
+    return this.request(this.RequestMethod.Delete, '/logout');
+  }
 }
