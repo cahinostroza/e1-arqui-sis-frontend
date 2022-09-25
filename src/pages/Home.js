@@ -1,3 +1,4 @@
+import Button from '@mui/material/Button';
 import useAuthHook from "../hooks/use-auth.hook";
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
@@ -28,6 +29,9 @@ export default function Home() {
 
   return (
     <>
+      <div style={{ textAlign: 'right'}}>
+        <Button onClick={authContext.handleUserLogout} size="small">Cerrar sesión</Button>
+      </div>
       {events && <EventsTable events={events}/>}
     </>
   );
