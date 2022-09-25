@@ -6,25 +6,34 @@ import TextField from '@mui/material/TextField';
 import { useRef } from 'react';
 import { Link } from "react-router-dom";
 
-export default function LoginForm({ loginHandler }) {
+export default function RegisterForm({ registerHandler }) {
   const usernameRef = useRef(null);
+  const emailRef = useRef(null);
+  const contactRef = useRef(null);
   const passwordRef = useRef(null);
 
   const handleClick = (event) => {
     event.preventDefault();
-    loginHandler({ username: usernameRef.current.value, password: passwordRef.current.value})
+    registerHandler({
+      username: usernameRef.current.value,
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+      contact: contactRef.current.value,
+    })
   }
   return (
     <Card sx={{ width: 275, margin: 'auto' }}>
       <CardContent>
         <TextField label="Nombre de usuario" inputRef={usernameRef} />
+        <TextField label="Correo" inputRef={emailRef} />
         <TextField label="Contraseña" type="password" inputRef={passwordRef} />
+        <TextField label="Información de contecto" inputRef={contactRef} />
       </CardContent>
       <CardActions>
-        <div style={{ width: '100%'}}>
-          <Button onClick={handleClick}>Iniciar sesión</Button>
+      <div style={{ width: '100%'}}>
+          <Button onClick={handleClick}>Registrarse</Button>
         </div>
-        <Link to='/register'>Registrarse</Link>
+        <Link to='/login'>Iniciar sesión</Link>
       </CardActions>
     </Card>
   );
