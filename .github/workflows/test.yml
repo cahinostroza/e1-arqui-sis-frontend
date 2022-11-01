@@ -33,7 +33,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Upload to S3
         run: npm run deploy-s3
-      - name: Invalidate CloudFront
+      - name: Invalidate CloudFront1
         uses: chetan/invalidate-cloudfront-action@v2
         env:
           DISTRIBUTION: ${{ secrets.DISTRIBUTION_FRONT }}
