@@ -4,9 +4,8 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
 import AuthContextProvider from './contexts/auth.context';
+import Event from './pages/Event';
 
 export default function App() {
   return (
@@ -15,8 +14,7 @@ export default function App() {
         <Routes>
           <Route path="/">
             <Route index element={<Home />} />
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
+            <Route path="/events/:id" element={< Event/>} />
           </Route>
         </Routes>
       </AuthContextProvider>

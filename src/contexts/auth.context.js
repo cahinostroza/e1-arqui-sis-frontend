@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '../hooks/use-local-storage.hook';
+import jwtDecode from 'jwt-decode';
 
 export const AuthContext = createContext();
 
@@ -10,14 +11,16 @@ function AuthContextProvider({ children }) {
   const [currentUser, storeUser, clearStoredUser] = useLocalStorage('arquisis-user');
   const navigate = useNavigate();
 
-  const handleUserLogin = (user) => {
+  const handleUserLogin = (accessToken) => {
+    const user = jwtDecode(accessToken);
+    user.accessToken = accessToken;
     storeUser(user);
     navigate('/');
   };
 
   const handleUserLogout = () => {
     clearStoredUser(null);
-    navigate('/login');
+    navigate('/');
   };
 
   const userStatus = useMemo(

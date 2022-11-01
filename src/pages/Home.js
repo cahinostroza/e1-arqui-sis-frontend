@@ -1,37 +1,34 @@
 import Button from '@mui/material/Button';
 import useAuthHook from "../hooks/use-auth.hook";
-import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
-import { EventsService } from "../services/events.service";
 import EventsTable from "../components/tables/events-table.component";
-import { UsersService } from '../services/users.service';
+import { JobsService } from '../services/jobs.service';
 
 export default function Home() {
-  const eventsService = new EventsService();
-  const usersService = new UsersService();
-  const [events, setEvents] = useState();
+  const jobsService = new JobsService();
+  const [jobsServiceStatus, setJobsServiceStatus] = useState();
   const authContext = useAuthHook();
-  const navigate = useNavigate();
   useEffect(() => {
-    const loadEvents = async() => {
+    const heartbeat = async() => {
       try {
-        const response = await eventsService.get();
-        setEvents(response);
+        await jobsService.heartbeat();
+        setJobsServiceStatus(true);
       } catch (error) {
-        if (error.message === 'user unauthorized') navigate('/login');
         console.log(error);
+        setJobsServiceStatus(false);
       }
     }
-    if (!authContext.currentUser) {
-      navigate('/login');
+    if (!authContext.currentUser && process.env.REACT_APP_USE_COGNITO) {
+      const accessToken = window.location.href.split("id_token=")[1]?.split('&')[0]
+      if (accessToken) authContext.handleUserLogin(accessToken);
+      else window.location.replace(`${process.env.REACT_APP_COGNITO_URI}${process.env.REACT_APP_FRONTEND_URI}`);
     } else {
-      if (!events) loadEvents();
+      heartbeat();
     }
   });
 
   const logout = async () => {
     try {
-      await usersService.logout();
       authContext.handleUserLogout();
     } catch (error) {
       console.log(error);
@@ -40,10 +37,19 @@ export default function Home() {
 
   return (
     <>
-      <div style={{ textAlign: 'right'}}>
-        <Button onClick={logout} size="small">Cerrar sesión</Button>
+      {
+        process.env.REACT_APP_USE_COGNITO &&
+        <div style={{ textAlign: 'right'}}>
+          <Button onClick={logout} size="small">Cerrar sesión</Button>
+        </div>
+      }
+      
+      <div style={{ textAlign: 'center'}}>
+        {`Servicio de cálculo de índice de complejidad ${jobsServiceStatus ? '': 'no'} disponible`}
       </div>
-      {events && <EventsTable events={events}/>}
+      {
+        (!process.env.REACT_APP_USE_COGNITO || authContext.currentUser) && <EventsTable/>
+      }
     </>
   );
 }

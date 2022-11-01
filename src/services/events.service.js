@@ -5,7 +5,15 @@ export class EventsService extends BaseService {
     super('events');
   }
 
-  async get() {
-    return this.request(this.RequestMethod.Get, '/');
+  async get(page=1) {
+    return this.request(this.RequestMethod.Get, `?page=${page}`);
+  }
+
+  async getById(id) {
+    return this.request(this.RequestMethod.Get, `${id}`);
+  }
+
+  async pageCount() {
+    return this.request(this.RequestMethod.Get, `pages`);
   }
 }
